@@ -40,51 +40,64 @@ class Tweet(object):
       return self.__str__()
 
 
-def read_data(path = 'data/labeled-data-singlelabels.csv'):
+def read_csv(path):
+     data = {}
+     with open(path) as f:
+       reader = csv.reader(f)
+       for row in reader:
+         (tweetId, tweetText, category, need_or_resource) = row
+         assert category in categories
+         assert need_or_resource in need_or_resource_labels
+         if need_or_resource == "N/A":
+           assert category == "None"
+         assert tweetId not in data.keys()
+         data[tweetId] = Tweet(tweetText, category, need_or_resource)
+
+     data = data.values() # list of Tweets
+     return data
+
+def write_csv(data, path):
+    with open(path, "w") as f:
+      writer = csv.writer(f)
+      for tweetId, tweet in enumerate(data):
+          writer.writerow([tweetId, str(tweet), tweet.category, tweet.need_or_resource])
+
+
+def split_data(data):
+     train_size = int(len(data) * TRAIN_SPLIT)
+     random.seed(7)
+     random.shuffle(data)
+     train_tweets = data[:train_size]
+     test_tweets = data[train_size:]
+     for c in categories:
+       assert len([t for t in test_tweets if t.category==c])>=10
+       assert len([t for t in train_tweets if t.category==c])>=10
+
+     # while True:
+     #   random.shuffle(data)
+     #   train_tweets = data[:train_size]
+     #   test_tweets = data[train_size:]
+     #   try:
+     #     for c in categories:
+     #       assert len([t for t in test_tweets if t.category==c])>=10
+     #       assert len([t for t in train_tweets if t.category==c])>=10
+     #   except AssertionError:
+     #     continue # shuffle and try again
+     #   break # break out of while True loop and return data
+
+     # print "Split into %i training and %i test tweets\n" % (len(train_tweets), len(test_tweets))
+     return train_tweets, test_tweets
+
+def read_data(train_path = 'data/labeled-data-singlelabels-train.csv',
+              test_path = 'data/labeled-data-singlelabels-test.csv'):
   """Returns two lists of tweets: the train set and the test set"""
-  data = {}
-  f = codecs.open(path, encoding='utf-8')
-  with open(path) as f:
-    reader = csv.reader(f)
-    for row in reader:
-      (tweetId, tweetText, category, need_or_resource) = row
-      assert category in categories
-      assert need_or_resource in need_or_resource_labels
-      if need_or_resource == "N/A":
-        assert category == "None"
-      assert tweetId not in data.keys()
-      data[tweetId] = Tweet(tweetText, category, need_or_resource)
 
-  data = data.values() # list of Tweets
 
-  # for c in categories:
-  #   print "%i tweets with category %s" % (len([d for d in data if d.category==c]), c)
-  # for n in needs:
-  #   print "%i tweets with need/resource %s" % (len([d for d in data if d.need_or_resource==n]), n)
+  train_tweets = read_csv(train_path)
+  test_tweets = read_csv(test_path)
 
-  train_size = int(len(data) * TRAIN_SPLIT)
-  random.seed(7)
-  random.shuffle(data)
-  train_tweets = data[:train_size]
-  test_tweets = data[train_size:]
-  for c in categories:
-    assert len([t for t in test_tweets if t.category==c])>=10
-    assert len([t for t in train_tweets if t.category==c])>=10
-
-  # while True:
-  #   random.shuffle(data)
-  #   train_tweets = data[:train_size]
-  #   test_tweets = data[train_size:]
-  #   try:
-  #     for c in categories:
-  #       assert len([t for t in test_tweets if t.category==c])>=10
-  #       assert len([t for t in train_tweets if t.category==c])>=10
-  #   except AssertionError:
-  #     continue # shuffle and try again
-  #   break # break out of while True loop and return data
-
-  # print "Split into %i training and %i test tweets\n" % (len(train_tweets), len(test_tweets))
   return train_tweets, test_tweets
+
 
 
 def featurize(tweet):
