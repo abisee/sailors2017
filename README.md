@@ -8,7 +8,7 @@ Here you can find links to all class materials used for the research project.
 * [Day 2: Rule-based classifiers](https://docs.google.com/presentation/d/1aWweVcIf1XBHu8okf5k3d_KXqObxHHx9W_ljCdm2jyw/edit?usp=sharing)
 
 ## End-of-session feedback forms
-* Day 2
+* [Day 2](https://docs.google.com/forms/d/e/1FAIpQLSeAMNSPJGDPmf3ULEM0ZQ2vECLOV7CSdBOUg2hmFEcv3SB3UA/viewform?usp=sf_link)
 
 ## Other materials
 * [Day 1: Data exploration spreadsheet](https://docs.google.com/spreadsheets/d/1EC83i5jhi5TjQTT4XN0v4CScZcie9WloASPGSEdJ2mY/edit?usp=sharing)
