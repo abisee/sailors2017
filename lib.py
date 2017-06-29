@@ -41,63 +41,47 @@ class Tweet(object):
 
 
 def read_csv(path):
-     data = {}
-     with open(path) as f:
-       reader = csv.reader(f)
-       for row in reader:
-         (tweetId, tweetText, category, need_or_resource) = row
-         assert category in categories
-         assert need_or_resource in need_or_resource_labels
-         if need_or_resource == "N/A":
-           assert category == "None"
-         assert tweetId not in data.keys()
-         data[tweetId] = Tweet(tweetText, category, need_or_resource)
-
-     data = data.values() # list of Tweets
-     return data
-
-def write_csv(data, path):
-    with open(path, "w") as f:
-      writer = csv.writer(f)
-      for tweetId, tweet in enumerate(data):
-          writer.writerow([tweetId, str(tweet), tweet.category, tweet.need_or_resource])
+   data = {}
+   with open(path) as f:
+     reader = csv.reader(f)
+     for row in reader:
+       (tweetId, tweetText, category, need_or_resource) = row
+       assert category in categories
+       assert need_or_resource in need_or_resource_labels
+       if need_or_resource == "N/A":
+         assert category == "None"
+       assert tweetId not in data.keys()
+       data[tweetId] = Tweet(tweetText, category, need_or_resource)
+   data = data.values() # list of Tweets
+   return data
 
 
-def split_data(data):
-     train_size = int(len(data) * TRAIN_SPLIT)
-     random.seed(7)
-     random.shuffle(data)
-     train_tweets = data[:train_size]
-     test_tweets = data[train_size:]
-     for c in categories:
-       assert len([t for t in test_tweets if t.category==c])>=10
-       assert len([t for t in train_tweets if t.category==c])>=10
+# def write_csv(data, path):
+#   with open(path, "w") as f:
+#     writer = csv.writer(f)
+#     for tweetId, tweet in enumerate(data):
+#         writer.writerow([tweetId, str(tweet), tweet.category, tweet.need_or_resource])
 
-     # while True:
-     #   random.shuffle(data)
-     #   train_tweets = data[:train_size]
-     #   test_tweets = data[train_size:]
-     #   try:
-     #     for c in categories:
-     #       assert len([t for t in test_tweets if t.category==c])>=10
-     #       assert len([t for t in train_tweets if t.category==c])>=10
-     #   except AssertionError:
-     #     continue # shuffle and try again
-     #   break # break out of while True loop and return data
 
-     # print "Split into %i training and %i test tweets\n" % (len(train_tweets), len(test_tweets))
-     return train_tweets, test_tweets
+# def split_data(data):
+#    train_size = int(len(data) * TRAIN_SPLIT)
+#    random.seed(7)
+#    random.shuffle(data)
+#    train_tweets = data[:train_size]
+#    test_tweets = data[train_size:]
+#
+#    # print "Split into %i training and %i test tweets\n" % (len(train_tweets), len(test_tweets))
+#    return train_tweets, test_tweets
+
 
 def read_data(train_path = 'data/labeled-data-singlelabels-train.csv',
               test_path = 'data/labeled-data-singlelabels-test.csv'):
   """Returns two lists of tweets: the train set and the test set"""
-
-
+  # tweets = read_csv('data/labeled-data-singlelabels.csv')
+  # train_tweets, test_tweets = split_data(tweets)
   train_tweets = read_csv(train_path)
   test_tweets = read_csv(test_path)
-
   return train_tweets, test_tweets
-
 
 
 def featurize(tweet):
@@ -195,3 +179,43 @@ def most_discriminative(tweets, feature_probs, category_probs):
     for (f,p) in probs[:10]:
         print "{0:20} {1:.4f}".format(f,p)
     print ""
+
+
+def evaluate(predictions, c):
+  """
+  Inputs:
+      predictions: a list of (tweet, predicted_category) pairs
+      c: a category
+  Calculate the precision, recall and F1 for a single category c (e.g. Food)
+  """
+
+  true_positives = 0.0
+  false_positives = 0.0
+  false_negatives = 0.0
+
+  for (tweet, predicted_category) in predictions:
+      true_category = tweet.category
+      if true_category == c and predicted_category == c:
+          true_positives += 1
+      elif true_category == c and predicted_category != c:
+          false_negatives += 1
+      elif true_category != c and predicted_category == c:
+          false_positives += 1
+
+  if true_positives == 0:
+      precision = 0.0
+      recall = 0.0
+      f1 = 0.0
+  else:
+      precision = true_positives*100 / (true_positives + false_positives)
+      recall = true_positives*100 / (true_positives + false_negatives)
+      f1 = 2*precision*recall / (precision + recall)
+
+  print c
+  print "Precision: ", precision
+  print "Recall: ", recall
+  print "F1: ", f1
+  print ""
+#     print "Class %s: precision %.2f, recall %.2f, F1 %.2f" % (c, precision, recall, f1)
+
+  return f1
