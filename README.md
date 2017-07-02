@@ -6,8 +6,9 @@ Here you can find links to all class materials used for the research project.
 ## Slides
 * [Day 1: Introduction to NLP](https://docs.google.com/presentation/d/1ETVn3Zpqy7Cmv7LuqG-kJ2zwR7Yz8BQUMgnzTkC6fwY/edit?usp=sharing)
 * [Day 2: Rule-based classifiers](https://docs.google.com/presentation/d/1aWweVcIf1XBHu8okf5k3d_KXqObxHHx9W_ljCdm2jyw/edit?usp=sharing)
-* [Day 3: Evaluation metrics](https://docs.google.com/presentation/d/1nfideUIXIcslK9eLNrtxVGyaJG8KJlq1heI-A4YJn_w/edit?usp=sharing)
-* [Day 4: Probability theory and Bayes rule](https://docs.google.com/presentation/d/1nOEo5AKcdwBjdhNLj1yP0CTw508H6I34BjU6yxRZ9ck/view)
+* [Day 3: Evaluation metrics](https://docs.google.com/presentation/d/1nfideUIXIcslK9eLNrtxVGyaJG8KJlq1heI-A4YJn_w/edit?usp=sharing) (Exercise sheet [here](https://docs.google.com/document/d/1IyynNr2hVJY8LOzFEBKRXNJ71usqfPQuR81lrFjEcPc/edit?usp=sharing))
+* [Day 4: Probability theory and Bayes rule](https://docs.google.com/presentation/d/1nOEo5AKcdwBjdhNLj1yP0CTw508H6I34BjU6yxRZ9ck/view) 
+(Exercise sheet [here](https://docs.google.com/document/d/1u8pY6YicTEa3xZI6QxcPfrZ8A9mIJYxjA4iL6hpSB9c/edit?usp=sharing))
 
 ## End-of-session feedback forms
 * [Day 2](https://docs.google.com/forms/d/e/1FAIpQLSeAMNSPJGDPmf3ULEM0ZQ2vECLOV7CSdBOUg2hmFEcv3SB3UA/viewform?usp=sf_link)
