@@ -11,7 +11,7 @@ Here you can find links to all class materials used for the research project.
 (Exercise sheet [here](https://docs.google.com/document/d/1u8pY6YicTEa3xZI6QxcPfrZ8A9mIJYxjA4iL6hpSB9c/edit?usp=sharing))
 * [Day 5: Naive Bayes classifier](https://docs.google.com/presentation/d/1EM6BmNpjo5QdymzkUUfWdwNxuIw-AZtzGjswcW-ioMY/edit?usp=sharing)
 
-## End-of-session feedback forms
+## End-of-day feedback forms
 * [Day 2](https://docs.google.com/forms/d/e/1FAIpQLSeAMNSPJGDPmf3ULEM0ZQ2vECLOV7CSdBOUg2hmFEcv3SB3UA/viewform?usp=sf_link)
 * [Day 3](https://goo.gl/forms/pGjUsWqQLfgLnDNm1)
 * [Day 4](https://docs.google.com/forms/d/e/1FAIpQLSeS-wkRL0znhCG9sEDMcqk9MB7V7my8M6ysXWK0RMu81WS1FA/viewform)
