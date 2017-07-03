@@ -10,7 +10,7 @@ Here you can find links to all class materials used for the research project.
 * [Day 4: Probability theory and Bayes rule](https://docs.google.com/presentation/d/1nOEo5AKcdwBjdhNLj1yP0CTw508H6I34BjU6yxRZ9ck/view) 
 (Exercise sheet [here](https://docs.google.com/document/d/1u8pY6YicTEa3xZI6QxcPfrZ8A9mIJYxjA4iL6hpSB9c/edit?usp=sharing))
 * [Day 5 morning: Naive Bayes classifier](https://docs.google.com/presentation/d/1EM6BmNpjo5QdymzkUUfWdwNxuIw-AZtzGjswcW-ioMY/edit?usp=sharing)
-* [Day 5 afternoon: more NLP](https://docs.google.com/presentation/d/1biWvkfLANZWiwvePX7WWcKI5JNNMJ9XSewZDwyHmCC8/edit?usp=sharing)
+* [Day 5 afternoon: More NLP](https://docs.google.com/presentation/d/1biWvkfLANZWiwvePX7WWcKI5JNNMJ9XSewZDwyHmCC8/edit?usp=sharing)
 
 ## End-of-day feedback forms
 * [Day 2](https://docs.google.com/forms/d/e/1FAIpQLSeAMNSPJGDPmf3ULEM0ZQ2vECLOV7CSdBOUg2hmFEcv3SB3UA/viewform?usp=sf_link)
