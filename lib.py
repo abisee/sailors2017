@@ -219,3 +219,26 @@ def evaluate(predictions, c):
 #     print "Class %s: precision %.2f, recall %.2f, F1 %.2f" % (c, precision, recall, f1)
 
   return f1
+
+
+def get_box_contents(n_boxes = 2):
+    box1 = ["red"] * 10 + ["blue"] * 39 + ["yellow"] * 1 + ["green"] * 27 + ["orange"] * 23
+    box2 = ["red"] * 53 + ["blue"] * 5 + ["yellow"] * 25 + ["green"] * 9 + ["orange"] * 8
+    box3 = ["red"] * 15 + ["blue"] * 15 + ["yellow"] * 64 + ["green"] * 3 + ["orange"] * 3
+    box4 = ["red"] * 5 + ["blue"] * 5 + ["yellow"] * 5 + ["green"] * 5 + ["orange"] * 80
+
+
+    assert(len(box1) == 100)
+    assert(len(box2) == 100)
+    assert(len(box3) == 100)
+    assert(len(box4) == 100)
+
+
+    random.shuffle(box1)
+    random.shuffle(box2)
+    random.shuffle(box3)
+    random.shuffle(box4)
+
+    boxes = [box1, box2, box3, box4][0:n_boxes]
+
+    return boxes
