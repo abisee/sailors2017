@@ -18,20 +18,21 @@ need_or_resource_labels = ['need', 'resource', 'N/A']
 class Tweet(object):
   def __init__(self, tweetSurfaceForm, category, need_or_resource):
     if isinstance(tweetSurfaceForm, unicode):
-      self.tweetTokens = word_tokenize(tweetSurfaceForm)
+      self.tokenList = word_tokenize(tweetSurfaceForm)
     else:
-      self.tweetTokens = word_tokenize(tweetSurfaceForm.decode('utf-8','ignore'))
+      self.tokenList = word_tokenize(tweetSurfaceForm.decode('utf-8','ignore'))
+    self.tokenSet = set([t.lower() for t in self.tokenList])
     self.category = category
     self.need_or_resource = need_or_resource
 
   def __getitem__(self,index):
-    return self.tweetTokens[index]
+    return self.tokenList[index]
 
   def idx(self, token):
-    return self.tweetTokens.index(token)
+    return self.tokenList.index(token)
 
   def __unicode__(self):
-    return " ".join(self.tweetTokens)
+    return " ".join(self.tokenList)
 
   def __str__(self):
     return unicode(self).encode('utf-8')
@@ -82,10 +83,6 @@ def read_data(train_path = 'data/labeled-data-singlelabels-train.csv',
   train_tweets = read_csv(train_path)
   test_tweets = read_csv(test_path)
   return train_tweets, test_tweets
-
-
-def featurize(tweet):
-  return set([t.lower() for t in tweet.tweetTokens])
 
 
 def show_confusion_matrix(predictions):
@@ -149,7 +146,7 @@ def show_predictions(predictions, show_mistakes_only=False):
 def get_category_prob(tweet, prob_c, feature_probs_c):
     """Calculate P(c|tweet) for a category c"""
     ans = prob_c
-    for x in featurize(tweet):
+    for x in tweet.tokenSet:
       if x in feature_probs_c.keys():
         ans *= feature_probs_c[x]
       else:
@@ -159,7 +156,7 @@ def get_category_prob(tweet, prob_c, feature_probs_c):
 
 def most_discriminative(tweets, feature_probs, category_probs):
   """Prints, for each category, which features are most discriminative i.e. maximize P(category|feature), including normalization by P(feature)"""
-  all_features = set([feature for tweet in tweets for feature in featurize(tweet)])
+  all_features = set([feature for tweet in tweets for feature in tweet.tokenSet])
 
   feat2dist = {} # maps feature f to a probability distribution over categories, for a tweet containing just this feature
 
@@ -171,17 +168,17 @@ def most_discriminative(tweets, feature_probs, category_probs):
     feat2dist[f] = dist
 
   # for each category print the features that maximize P(C|f) (normalized by P(f))
-  print "MOST DISCRIMINATIVE FEATURES: \n"
+  print "MOST DISCRIMINATIVE TOKENS: \n"
   for c in categories:
     probs = [(f,dist[c]) for f,dist in feat2dist.iteritems()]
     probs = sorted(probs, key=lambda x: x[1], reverse=True)
-    print "{0:20} {1:10}".format("Feature", "P(%s|feature)"%c)
+    print "{0:20} {1:10}".format("TOKEN", "P(%s|token)"%c)
     for (f,p) in probs[:10]:
         print "{0:20} {1:.4f}".format(f,p)
     print ""
 
 
-def evaluate(predictions, c):
+def get_category_f1(predictions, c):
   """
   Inputs:
       predictions: a list of (tweet, predicted_category) pairs
@@ -219,6 +216,18 @@ def evaluate(predictions, c):
 #     print "Class %s: precision %.2f, recall %.2f, F1 %.2f" % (c, precision, recall, f1)
 
   return f1
+
+
+def evaluate(predictions):
+  """Calculate average F1"""
+  average_f1 = 0
+  for c in categories:
+    f1 = get_category_f1(predictions, c)
+    average_f1 += f1
+
+  average_f1 /= len(categories)
+  print "Average F1: ", average_f1
+
 
 
 def get_box_contents(n_boxes = 2):
