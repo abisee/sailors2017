@@ -291,3 +291,70 @@ def get_box_contents(n_boxes = 2):
     boxes = [box1, box2, box3, box4][0:n_boxes]
 
     return boxes
+
+
+
+
+def visualize_tweet(tweet, token_probs):
+    """
+        Visualizes a tweet and its probabilities in an IPython notebook.
+        Input:
+            tweet: a tweet as a string
+            token_probs: a dictionary of Counters that contain the unigram
+               probabilities for each category
+
+    """
+
+
+    # boileplate HTML part 1
+    html = """
+    <div id="viz-overlay" style="display:none;position:absolute;width:250px;height:110px;border: 1px solid #000; padding:8px;  background: #eee;">
+	<p>
+       <span style="color:orange;">P(<span class="viz-token-placeholder"></span> | food) = <span id="viz-p-food"></span></span><br>
+	   <span style="color:blue;">P(<span class="viz-token-placeholder"></span> | water) = <span id="viz-p-water"></span><br>
+	   <span style="color:green;">P(<span class="viz-token-placeholder"></span> | medical) = <span id="viz-p-medical"></span><br>
+	   <span style="color:red;">P(<span class="viz-token-placeholder"></span> | energy) = <span id="viz-p-energy"></span><br>
+	   <span style="color:gray;">P(<span class="viz-token-placeholder"></span> | none) = <span id="viz-p-none"></span></p>
+    </p>
+    </div>
+
+    <div id="viz-tweet" style="padding: 190px 0 0;">
+    """
+
+
+    tokens = word_tokenize(tweet.lower())
+    categories = ["Food", "None", "Medical", "Energy", "Water"]
+    for token in tokens:
+        probs = [token_probs['Food'][token], token_probs['None'][token],
+                token_probs['Medical'][token], token_probs['Energy'][token],
+                token_probs['Water'][token]]
+        idx = np.argmax(probs)
+        max_class = categories[idx]
+
+        html += '<span style="%s" class="viz-token" data-food="%f" data-none="%f" data-medical="%f" data-energy="%f" data-water="%f">%s</span> ' \
+                  % (class2color_style(max_class), token_probs['Food'][token], token_probs['None'][token], token_probs['Medical'][token],
+                  token_probs['Energy'][token], token_probs['Water'][token], token)
+
+    #Javascript
+    html += """
+    </div>
+     <script type="text/javascript">
+	$(document).ready(function() {
+		$("span.viz-token").mouseover(function() {
+			$("span.viz-token").css({"font-weight": "normal"});
+			$(this).css({"font-weight": "bold"});
+			$("span.viz-token-placeholder").text($(this).text());
+			$("#viz-p-food").text($(this).data("food"));
+			$("#viz-p-water").text($(this).data("water"));
+			$("#viz-p-medical").text($(this).data("medical"));
+			$("#viz-p-energy").text($(this).data("energy"));
+			$("#viz-p-none").text($(this).data("none"));
+			$("#viz-overlay").show();
+			$("#viz-overlay").offset({left:$(this).offset().left-110+$(this).width()/2, top:$(this).offset().top - 140});
+		});
+	});
+    </script>
+
+    """
+
+    display(HTML(html))
