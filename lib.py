@@ -338,7 +338,7 @@ def visualize_tweet(tweet, prior_probs, token_probs):
     predicted_category = classify_nb(tweet, prior_probs, token_probs)
     html += '<p><strong>Predicted category: </strong> <span style="%s"> %s</span><br>' \
               % (class2color_style(predicted_category), predicted_category)
-    html += '<strong>Actual category: </strong> <span style="%s"> %s</span></p>' \
+    html += '<strong>True category: </strong> <span style="%s"> %s</span></p>' \
               % (class2color_style(tweet.category), tweet.category)
 
     #Javascript
