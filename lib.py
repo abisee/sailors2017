@@ -6,7 +6,6 @@ import codecs
 import numpy as np
 from collections import Counter
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 from IPython.display import HTML, display
 
 SMOOTH_CONST = 0.001 # we want this to be smaller than 1/n where n is the size of the largest training category. that way, any word that has appeared exactly once (with category c) in training will still have a larger probability for category c, than any other category c'
