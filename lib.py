@@ -137,10 +137,10 @@ def most_discriminative(tweets, token_probs, prior_probs):
     single_token_tweet = Tweet(token, "", "")
     log_dist = {c: get_log_posterior_prob(single_token_tweet, prior_probs[c], token_probs[c]) for c in categories}
     min_log_dist = min(log_dist.values())
-    log_dist = {c: l+min_log_dist for c,l in log_dist.iteritems()}
-    dist = {c:math.exp(l) for c,l in log_dist.iteritems()}
-    s = sum([dist[c] for c in categories])
-    dist = {c: dist[c]/s for c in categories}
+    log_dist = {c: l+min_log_dist for c,l in log_dist.iteritems()} # shift so smallest value is 0 before taking exp
+    dist = {c:math.exp(l) for c,l in log_dist.iteritems()} # take exp
+    s = sum(dist.values())
+    dist = {c: dist[c]/s for c in categories} # normalize
     token2dist[token] = dist
 
   # for each category print the tokens that maximize P(C|token) (normalized by P(token))
@@ -149,7 +149,7 @@ def most_discriminative(tweets, token_probs, prior_probs):
     probs = [(token,dist[c]) for token,dist in token2dist.iteritems()]
     probs = sorted(probs, key=lambda x: x[1], reverse=True)
     print "{0:20} {1:10}".format("TOKEN", "P(%s|token)"%c)
-    for (f,p) in probs[:10]:
+    for (token,p) in probs[:10]:
         print "{0:20} {1:.4f}".format(token.encode('utf8'),p)
     print ""
 
