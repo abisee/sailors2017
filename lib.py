@@ -6,6 +6,7 @@ import codecs
 import numpy as np
 from collections import Counter
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 from IPython.display import HTML, display
 
 SMOOTH_CONST = 0.001 # we want this to be smaller than 1/n where n is the size of the largest training category. that way, any word that has appeared exactly once (with category c) in training will still have a larger probability for category c, than any other category c'
@@ -21,7 +22,10 @@ class Tweet(object):
       self.tokenList = word_tokenize(tweetSurfaceForm)
     else:
       self.tokenList = word_tokenize(tweetSurfaceForm.decode('utf-8','ignore'))
-    self.tokenSet = set([t.lower() for t in self.tokenList])
+    self.tokenList = [t.lower() for t in self.tokenList] # lowercase
+    self.tokenSet = set(self.tokenList)
+    self._bigramList = [(self.tokenList[idx], self.tokenList[idx+1]) for idx in range(len(self.tokenList)-1)]
+    self._featureSet = set(self._bigramList).union(self.tokenSet)
     self.category = category
     self.need_or_resource = need_or_resource
 
@@ -57,29 +61,9 @@ def read_csv(path):
    return data
 
 
-# def write_csv(data, path):
-#   with open(path, "w") as f:
-#     writer = csv.writer(f)
-#     for tweetId, tweet in enumerate(data):
-#         writer.writerow([tweetId, str(tweet), tweet.category, tweet.need_or_resource])
-
-
-# def split_data(data):
-#    train_size = int(len(data) * TRAIN_SPLIT)
-#    random.seed(7)
-#    random.shuffle(data)
-#    train_tweets = data[:train_size]
-#    test_tweets = data[train_size:]
-#
-#    # print "Split into %i training and %i test tweets\n" % (len(train_tweets), len(test_tweets))
-#    return train_tweets, test_tweets
-
-
 def read_data(train_path = 'data/labeled-data-singlelabels-train.csv',
               test_path = 'data/labeled-data-singlelabels-test.csv'):
   """Returns two lists of tweets: the train set and the test set"""
-  # tweets = read_csv('data/labeled-data-singlelabels.csv')
-  # train_tweets, test_tweets = split_data(tweets)
   train_tweets = read_csv(train_path)
   test_tweets = read_csv(test_path)
   return train_tweets, test_tweets
@@ -143,38 +127,31 @@ def show_predictions(predictions, show_mistakes_only=False):
   display(HTML(s.render()))
 
 
-def get_category_prob(tweet, prob_c, feature_probs_c):
-    """Calculate P(c|tweet) for a category c"""
-    ans = prob_c
-    for x in tweet.tokenSet:
-      if x in feature_probs_c.keys():
-        ans *= feature_probs_c[x]
-      else:
-        ans *= SMOOTH_CONST
-    return ans
 
+def most_discriminative(tweets, token_probs, prior_probs):
+  """Prints, for each category, which tokens are most discriminative i.e. maximize P(category|token), including normalization by P(token)"""
+  all_tokens = set([token for tweet in tweets for token in tweet.tokenSet])
 
-def most_discriminative(tweets, feature_probs, category_probs):
-  """Prints, for each category, which features are most discriminative i.e. maximize P(category|feature), including normalization by P(feature)"""
-  all_features = set([feature for tweet in tweets for feature in tweet.tokenSet])
+  token2dist = {} # maps token to a probability distribution over categories, for a tweet containing just this token
 
-  feat2dist = {} # maps feature f to a probability distribution over categories, for a tweet containing just this feature
-
-  for f in all_features:
-    single_feature_tweet = Tweet(f, "", "")
-    dist = {c: get_category_prob(single_feature_tweet, category_probs[c], feature_probs[c]) for c in categories}
+  for token in all_tokens:
+    single_token_tweet = Tweet(token, "", "")
+    log_dist = {c: get_log_posterior_prob(single_token_tweet, prior_probs[c], token_probs[c]) for c in categories}
+    min_log_dist = min(log_dist.values())
+    log_dist = {c: l+min_log_dist for c,l in log_dist.iteritems()}
+    dist = {c:math.exp(l) for c,l in log_dist.iteritems()}
     s = sum([dist[c] for c in categories])
     dist = {c: dist[c]/s for c in categories}
-    feat2dist[f] = dist
+    token2dist[token] = dist
 
-  # for each category print the features that maximize P(C|f) (normalized by P(f))
+  # for each category print the tokens that maximize P(C|token) (normalized by P(token))
   print "MOST DISCRIMINATIVE TOKENS: \n"
   for c in categories:
-    probs = [(f,dist[c]) for f,dist in feat2dist.iteritems()]
+    probs = [(token,dist[c]) for token,dist in token2dist.iteritems()]
     probs = sorted(probs, key=lambda x: x[1], reverse=True)
     print "{0:20} {1:10}".format("TOKEN", "P(%s|token)"%c)
     for (f,p) in probs[:10]:
-        print "{0:20} {1:.4f}".format(f,p)
+        print "{0:20} {1:.4f}".format(token.encode('utf8'),p)
     print ""
 
 
@@ -228,6 +205,69 @@ def evaluate(predictions):
   average_f1 /= len(categories)
   print "Average F1: ", average_f1
 
+
+def calc_probs(tweets, c):
+    """
+    Input:
+        tweets: a list of tweets
+        c: a string representing a category
+    Returns:
+        prob_c: the prior probability of category c
+        feature_probs: a Counter mapping each feature to P(feature|category c)
+    """
+    num_tweets = len(tweets)
+    num_tweets_about_c = len([t for t in tweets if t.category==c])
+    prob_c = float(num_tweets_about_c)/num_tweets
+    feature_counts = Counter() # maps token -> count and bigram -> count
+    for tweet in tweets:
+        if tweet.category==c:
+          for feature in tweet._featureSet:
+            feature_counts[feature] += 1
+    feature_probs = Counter({feature: float(count)/num_tweets_about_c for feature,count in feature_counts.iteritems()})
+    return prob_c, feature_probs
+
+
+def learn_nb(tweets):
+  feature_probs = {}
+  prior_probs = {}
+  for c in categories:
+    prior_c, feature_probs_c = calc_probs(tweets, c)
+    feature_probs[c] = feature_probs_c
+    prior_probs[c] = prior_c
+  return prior_probs, feature_probs
+
+
+def get_log_posterior_prob(tweet, prob_c, feature_probs_c):
+    """Calculate the posterior P(c|tweet).
+    (Actually, calculate something proportional to it).
+
+    Inputs:
+        tweet: a tweet
+        prob_c: the prior probability of category c
+        feature_probs_c: a Counter mapping each feature to P(feature|c)
+    Return:
+        The posterior P(c|tweet).
+    """
+    log_posterior = math.log(prob_c)
+    probs = {}
+    for feature in tweet._featureSet:
+        if feature_probs_c[feature] == 0:
+            log_posterior += math.log(SMOOTH_CONST)
+        else:
+            log_posterior += math.log(feature_probs_c[feature])
+    return log_posterior
+
+
+def classify_nb(tweet, prior_probs, token_probs):
+    """Classifies a tweet. Calculates the posterior P(c|tweet) for each category c,
+    and returns the category with largest posterior.
+    Input:
+        tweet
+    Output:
+        string equal to most-likely category for this tweet
+    """
+    log_posteriors = {c: get_log_posterior_prob(tweet, prior_probs[c], token_probs[c]) for c in categories}
+    return max(log_posteriors.keys(), key=lambda c:log_posteriors[c])
 
 
 def get_box_contents(n_boxes = 2):
