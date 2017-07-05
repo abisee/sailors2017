@@ -248,7 +248,6 @@ def get_log_posterior_prob(tweet, prob_c, feature_probs_c):
         The posterior P(c|tweet).
     """
     log_posterior = math.log(prob_c)
-    probs = {}
     for feature in tweet._featureSet:
         if feature_probs_c[feature] == 0:
             log_posterior += math.log(SMOOTH_CONST)
