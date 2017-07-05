@@ -293,11 +293,12 @@ def get_box_contents(n_boxes = 2):
 
 
 
-def visualize_tweet(tweet, token_probs):
+def visualize_tweet(tweet, prior_probs, token_probs):
     """
         Visualizes a tweet and its probabilities in an IPython notebook.
         Input:
             tweet: a tweet as a string
+            prior_probs: priors for each category
             token_probs: a dictionary of Counters that contain the unigram
                probabilities for each category
 
@@ -320,18 +321,25 @@ def visualize_tweet(tweet, token_probs):
     """
 
 
-    tokens = word_tokenize(tweet.lower())
-    categories = ["Food", "None", "Medical", "Energy", "Water"]
+    tokens = tweet.tokenList
+    categories = ["None", "Food", "Medical", "Energy", "Water"]
     for token in tokens:
-        probs = [token_probs['Food'][token], token_probs['None'][token],
+        probs = [token_probs['None'][token], token_probs['Food'][token],
                 token_probs['Medical'][token], token_probs['Energy'][token],
                 token_probs['Water'][token]]
-        idx = np.argmax(probs)
+        idx = np.argmax(probs) if sum(probs) > 0 else 0
         max_class = categories[idx]
 
         html += '<span style="%s" class="viz-token" data-food="%f" data-none="%f" data-medical="%f" data-energy="%f" data-water="%f">%s</span> ' \
                   % (class2color_style(max_class), token_probs['Food'][token], token_probs['None'][token], token_probs['Medical'][token],
                   token_probs['Energy'][token], token_probs['Water'][token], token)
+
+    # Predicted category.
+    predicted_category = classify_nb(tweet, prior_probs, token_probs)
+    html += '<p><strong>Predicted category: </strong> <span style="%s"> %s</span><br>' \
+              % (class2color_style(predicted_category), predicted_category)
+    html += '<strong>Actual category: </strong> <span style="%s"> %s</span></p>' \
+              % (class2color_style(tweet.category), tweet.category)
 
     #Javascript
     html += """
