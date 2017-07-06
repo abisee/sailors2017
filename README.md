@@ -13,6 +13,7 @@ Here you can find links to all class materials used for the research project.
 * [Day 5 afternoon: More NLP](https://docs.google.com/presentation/d/1biWvkfLANZWiwvePX7WWcKI5JNNMJ9XSewZDwyHmCC8/edit?usp=sharing)
 * [Day 6 morning: Naive Bayes classifier for Twitter project](https://docs.google.com/presentation/d/1qIdeh8nYIOHztvkK5DfN-86VX9RHJiV7CAOKf7MbL8M/edit?usp=sharing)
 * [Day 6 afternoon: Neural Networks](https://docs.google.com/presentation/d/1D23sp1JVwPbORXlnQ8D7fpePdxjNSuoGO0IfZLKT4zY/edit?usp=sharing)
+* [Day 7: Wrap-up](https://docs.google.com/presentation/d/128LUceybBh4ORH04Wwe9MqFCWz-fDJVZ08CF1q9V9Ro/edit?usp=sharing)
 
 
 ## End-of-day feedback forms
@@ -26,3 +27,4 @@ Here you can find links to all class materials used for the research project.
 * [Day 1: Data exploration spreadsheet](https://docs.google.com/spreadsheets/d/1EC83i5jhi5TjQTT4XN0v4CScZcie9WloASPGSEdJ2mY/edit?usp=sharing)
 * [Next Steps: Resources for after SAILORS](https://docs.google.com/document/d/1_byDijN6Mc0Gk7phL5e5dmVuhyMkkZDNoEsXXvnfzPw/edit?usp=sharing)
 * [Naive Bayes cheat sheet](https://docs.google.com/document/d/1Z6WnbCQYtOsaoFAZc4VdXtCc9edGIlPBX9CulSwBVgo/edit)
+* [Next Steps](https://docs.google.com/document/d/1_byDijN6Mc0Gk7phL5e5dmVuhyMkkZDNoEsXXvnfzPw/edit#)
