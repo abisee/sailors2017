@@ -18,14 +18,6 @@ Instructors: [Abi See](http://cs.stanford.edu/people/abisee/) (abisee@stanford.e
 * [Day 7: Wrap-up](https://docs.google.com/presentation/d/128LUceybBh4ORH04Wwe9MqFCWz-fDJVZ08CF1q9V9Ro/edit?usp=sharing)
 
 
-## End-of-day feedback forms
-* [Day 2](https://docs.google.com/forms/d/e/1FAIpQLSeAMNSPJGDPmf3ULEM0ZQ2vECLOV7CSdBOUg2hmFEcv3SB3UA/viewform?usp=sf_link)
-* [Day 3](https://goo.gl/forms/pGjUsWqQLfgLnDNm1)
-* [Day 4](https://docs.google.com/forms/d/e/1FAIpQLSeS-wkRL0znhCG9sEDMcqk9MB7V7my8M6ysXWK0RMu81WS1FA/viewform)
-* [Day 5](https://goo.gl/forms/dVgZQBq1KS9QJR6a2)
-* [Day 6](https://goo.gl/forms/WJ0P8hnjAClNmbuy1)
-* [End-of-project](https://goo.gl/forms/NCoZTpsdpbfccQ7A3)
-
 ## Other materials
 * [Day 1: Data exploration spreadsheet](https://docs.google.com/spreadsheets/d/1EC83i5jhi5TjQTT4XN0v4CScZcie9WloASPGSEdJ2mY/edit?usp=sharing)
 * [Naive Bayes cheat sheet](https://docs.google.com/document/d/1Z6WnbCQYtOsaoFAZc4VdXtCc9edGIlPBX9CulSwBVgo/edit)
