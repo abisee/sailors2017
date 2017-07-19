@@ -62,7 +62,7 @@ Instructors: [Abi See](http://cs.stanford.edu/people/abisee/) (abisee@stanford.e
 
     ```
     import nltk
-    nltk.download("nltk")
+    nltk.download("punkt")
     exit()
     ```
 
