@@ -71,3 +71,7 @@ Instructors: [Abi See](http://cs.stanford.edu/people/abisee/) (abisee@stanford.e
     ```
     jupyter notebook
     ```
+
+## Accessing the completed versions of the notebooks
+
+The directory `filled` contains versions of the iPython notebooks with the solutions filled in. If you would like to run these, you need to copy them to the main directory (i.e. `sailors2017`), overwriting the blank versions of the notebooks that are currently there. Then run `jupyter notebook` and you should be able to access the completed versions of the notebooks.
